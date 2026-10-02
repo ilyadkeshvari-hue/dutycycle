@@ -1078,5 +1078,13 @@ route();
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if(cur===3)render();if(cur===4)renderRel();});
 })();
 </script>
+<script data-goatcounter="https://dutycycle.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script>
+window.addEventListener('hashchange',function(){
+  if(window.goatcounter&&window.goatcounter.count){
+    window.goatcounter.count({path:location.pathname+location.hash,title:document.title});
+  }
+});
+</script>
 </body>
 </html>

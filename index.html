@@ -1176,5 +1176,245 @@ window.addEventListener('hashchange',function(){
   }
 });
 </script>
+<!-- ===== Quick calculator widget ===== -->
+<style>
+.qc-fab{position:fixed;left:calc(18px + env(safe-area-inset-left,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:900;width:58px;height:58px;border-radius:50%;border:0;cursor:pointer;background:var(--navy,#0F2747);color:#fff;display:grid;place-items:center;box-shadow:0 6px 18px rgba(15,39,71,.35);transition:transform .15s}
+.qc-fab:hover{transform:translateY(-2px)}
+.qc-fab:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+:root[data-theme="dark"] .qc-fab{background:var(--accent);color:#0B1524}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .qc-fab{background:var(--accent);color:#0B1524}}
+.qc-panel{position:fixed;left:calc(18px + env(safe-area-inset-left,0px));bottom:calc(88px + env(safe-area-inset-bottom,0px));z-index:901;width:min(390px,calc(100vw - 36px));max-height:min(620px,calc(100vh - 120px));overflow:auto;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:16px;box-shadow:0 16px 40px rgba(15,23,42,.25);font-family:var(--font)}
+.qc-panel[hidden]{display:none}
+.qc-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 6px}
+.qc-head h2{margin:0;font-size:1.05rem;font-stretch:110%}
+.qc-x{border:0;background:transparent;color:var(--muted);width:36px;height:36px;border-radius:8px;cursor:pointer;font-size:1.3rem;line-height:1}
+.qc-x:hover{background:var(--soft);color:var(--ink)}
+.qc-tabs{display:flex;gap:4px;padding:4px 12px 0;border-bottom:1px solid var(--line);overflow-x:auto}
+.qc-tab{flex:1 0 auto;border:0;background:transparent;color:var(--muted);font:inherit;font-size:.82rem;font-weight:700;padding:9px 8px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.qc-tab[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.qc-body{padding:14px 16px 16px}
+.qc-sec{font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:14px 0 8px}
+.qc-sec:first-child{margin-top:0}
+.qc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.qc-f label{display:block;font-size:.8rem;font-weight:700;margin-bottom:4px}
+.qc-f input,.qc-f select{width:100%;box-sizing:border-box;font:inherit;font-size:.92rem;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.qc-f input:focus,.qc-f select:focus{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent)}
+.qc-unit{color:var(--muted);font-weight:400}
+.qc-out{margin-top:12px;background:var(--soft);border-radius:10px;padding:10px 12px;font-size:.9rem}
+.qc-out:empty{display:none}
+.qc-row{display:flex;justify-content:space-between;gap:10px;padding:3px 0}
+.qc-row span:first-child{color:var(--muted)}
+.qc-row b{font-variant-numeric:tabular-nums}
+.qc-msg{color:var(--muted);font-size:.85rem}
+.qc-warn{color:#B45309;font-size:.85rem}
+.qc-note{font-size:.76rem;color:var(--muted);margin-top:10px;line-height:1.45}
+.qc-btn{margin-top:10px;font:inherit;font-size:.82rem;font-weight:700;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:8px;padding:7px 12px;cursor:pointer}
+.qc-btn:hover{background:var(--soft)}
+</style>
+
+<button class="qc-fab" id="qc-fab" type="button" aria-label="Open engineering calculator" aria-expanded="false" aria-controls="qc-panel">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2.5" width="16" height="19" rx="2.5"/><rect x="7" y="5.5" width="10" height="4" rx="1"/><path d="M8 13h.01M12 13h.01M16 13h.01M8 17h.01M12 17h.01M16 17h.01"/></svg>
+</button>
+
+<section class="qc-panel" id="qc-panel" role="dialog" aria-label="Engineering calculator" hidden>
+<div class="qc-head"><h2>Engineering calculator</h2><button class="qc-x" id="qc-close" type="button" aria-label="Close calculator">×</button></div>
+<div class="qc-tabs" role="tablist">
+<button class="qc-tab" role="tab" aria-selected="true" data-tab="ohm">Ohm &amp; power</button>
+<button class="qc-tab" role="tab" aria-selected="false" data-tab="conv">Converter</button>
+<button class="qc-tab" role="tab" aria-selected="false" data-tab="pas">Passives</button>
+<button class="qc-tab" role="tab" aria-selected="false" data-tab="rel">Thermal &amp; reliability</button>
+</div>
+
+<div class="qc-body" data-pane="ohm">
+<div class="qc-msg">Enter any two values. Prefixes work: 4.7k, 220m, 47u.</div>
+<div class="qc-grid" style="margin-top:10px">
+<div class="qc-f"><label for="qc-v">Voltage <span class="qc-unit">V</span></label><input id="qc-v" inputmode="decimal" autocomplete="off"></div>
+<div class="qc-f"><label for="qc-i">Current <span class="qc-unit">A</span></label><input id="qc-i" inputmode="decimal" autocomplete="off"></div>
+<div class="qc-f"><label for="qc-r">Resistance <span class="qc-unit">Ω</span></label><input id="qc-r" inputmode="decimal" autocomplete="off"></div>
+<div class="qc-f"><label for="qc-p">Power <span class="qc-unit">W</span></label><input id="qc-p" inputmode="decimal" autocomplete="off"></div>
+</div>
+<div class="qc-out" id="qc-ohm-out"></div>
+<button class="qc-btn" type="button" data-clear="ohm">Clear</button>
+</div>
+
+<div class="qc-body" data-pane="conv" hidden>
+<div class="qc-f"><label for="qc-top">Topology</label>
+<select id="qc-top"><option value="buck">Buck</option><option value="boost" selected>Boost</option><option value="bb">Buck-boost (inverting)</option><option value="quad">Quadratic boost</option></select></div>
+<div class="qc-sec">Voltage gain</div>
+<div class="qc-msg">Enter Vin and either Vout or D.</div>
+<div class="qc-grid" style="margin-top:8px">
+<div class="qc-f"><label for="qc-vin">Vin <span class="qc-unit">V</span></label><input id="qc-vin" inputmode="decimal" autocomplete="off"></div>
+<div class="qc-f"><label for="qc-vout">|Vout| <span class="qc-unit">V</span></label><input id="qc-vout" inputmode="decimal" autocomplete="off"></div>
+<div class="qc-f"><label for="qc-d">Duty cycle D <span class="qc-unit">0–1</span></label><input id="qc-d" inputmode="decimal" autocomplete="off"></div>
+</div>
+<div class="qc-sec">Inductor for a given ripple</div>
+<div class="qc-grid">
+<div class="qc-f"><label for="qc-fs">Switching freq. <span class="qc-unit">Hz</span></label><input id="qc-fs" inputmode="decimal" autocomplete="off" placeholder="e.g. 50k"></div>
+<div class="qc-f"><label for="qc-di">Ripple ΔI<sub>L</sub> <span class="qc-unit">A</span></label><input id="qc-di" inputmode="decimal" autocomplete="off"></div>
+</div>
+<div class="qc-out" id="qc-conv-out"></div>
+<div class="qc-note">Ideal relations in continuous conduction mode (CCM). Non-ideal losses lower the real gain.</div>
+<button class="qc-btn" type="button" data-clear="conv">Clear</button>
+</div>
+
+<div class="qc-body" data-pane="pas" hidden>
+<div class="qc-msg">Fill in what you know; results appear for every quantity that can be computed.</div>
+<div class="qc-grid" style="margin-top:10px">
+<div class="qc-f"><label for="qc-pf">Frequency <span class="qc-unit">Hz</span></label><input id="qc-pf" inputmode="decimal" autocomplete="off"></div>
+<div class="qc-f"><label for="qc-pr">Resistance <span class="qc-unit">Ω</span></label><input id="qc-pr" inputmode="decimal" autocomplete="off"></div>
+<div class="qc-f"><label for="qc-pl">Inductance <span class="qc-unit">H</span></label><input id="qc-pl" inputmode="decimal" autocomplete="off" placeholder="e.g. 100u"></div>
+<div class="qc-f"><label for="qc-pc">Capacitance <span class="qc-unit">F</span></label><input id="qc-pc" inputmode="decimal" autocomplete="off" placeholder="e.g. 47u"></div>
+<div class="qc-f"><label for="qc-pi">Inductor current <span class="qc-unit">A</span></label><input id="qc-pi" inputmode="decimal" autocomplete="off"></div>
+<div class="qc-f"><label for="qc-pv">Capacitor voltage <span class="qc-unit">V</span></label><input id="qc-pv" inputmode="decimal" autocomplete="off"></div>
+</div>
+<div class="qc-out" id="qc-pas-out"></div>
+<button class="qc-btn" type="button" data-clear="pas">Clear</button>
+</div>
+
+<div class="qc-body" data-pane="rel" hidden>
+<div class="qc-sec">Junction temperature</div>
+<div class="qc-grid">
+<div class="qc-f"><label for="qc-ta">Ambient T<sub>a</sub> <span class="qc-unit">°C</span></label><input id="qc-ta" inputmode="decimal" autocomplete="off" placeholder="e.g. 40"></div>
+<div class="qc-f"><label for="qc-pl2">Device loss <span class="qc-unit">W</span></label><input id="qc-pl2" inputmode="decimal" autocomplete="off"></div>
+<div class="qc-f"><label for="qc-rth">R<sub>th(j-a)</sub> <span class="qc-unit">°C/W</span></label><input id="qc-rth" inputmode="decimal" autocomplete="off"></div>
+</div>
+<div class="qc-sec">Failure rate and MTTF</div>
+<div class="qc-grid">
+<div class="qc-f"><label for="qc-lam">Failure rate λ</label><input id="qc-lam" inputmode="decimal" autocomplete="off"></div>
+<div class="qc-f"><label for="qc-lu">Unit</label><select id="qc-lu"><option value="fit">FIT (per 10⁹ h)</option><option value="h">per hour</option><option value="mh">per 10⁶ h</option></select></div>
+<div class="qc-f"><label for="qc-t">Mission time <span class="qc-unit">h</span></label><input id="qc-t" inputmode="decimal" autocomplete="off" placeholder="e.g. 87600"></div>
+</div>
+<div class="qc-out" id="qc-rel-out"></div>
+<div class="qc-note">Constant failure rate: R(t) = e<sup>−λt</sup>, MTTF = 1/λ. 1 year = 8760 h.</div>
+<button class="qc-btn" type="button" data-clear="rel">Clear</button>
+</div>
+</section>
+
+<script>
+(function(){
+  var g=function(id){return document.getElementById(id);};
+  var fab=g('qc-fab'),panel=g('qc-panel');
+  function open(o){panel.hidden=!o;fab.setAttribute('aria-expanded',o?'true':'false');fab.setAttribute('aria-label',o?'Close engineering calculator':'Open engineering calculator');}
+  fab.addEventListener('click',function(){open(panel.hidden);});
+  g('qc-close').addEventListener('click',function(){open(false);fab.focus();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!panel.hidden){open(false);fab.focus();}});
+  var tabs=panel.querySelectorAll('.qc-tab'),panes=panel.querySelectorAll('.qc-body');
+  tabs.forEach(function(t){t.addEventListener('click',function(){
+    tabs.forEach(function(x){x.setAttribute('aria-selected',x===t?'true':'false');});
+    panes.forEach(function(p){p.hidden=p.getAttribute('data-pane')!==t.getAttribute('data-tab');});
+  });});
+
+  var PRE={p:1e-12,n:1e-9,u:1e-6,'µ':1e-6,'μ':1e-6,m:1e-3,k:1e3,K:1e3,M:1e6,G:1e9};
+  function num(id){
+    var s=(g(id).value||'').trim().replace(/,/g,'.').replace(/\s+/g,'');
+    if(!s)return null;
+    var m=s.match(/^([-+]?(?:\d+\.?\d*|\.\d+)(?:e[-+]?\d+)?)([pnuµμmkKMG]?)[a-zA-ZΩ°/]*$/);
+    if(!m)return NaN;
+    var v=parseFloat(m[1]);if(m[2])v*=PRE[m[2]];return v;
+  }
+  var SI=[[1e9,'G'],[1e6,'M'],[1e3,'k'],[1,''],[1e-3,'m'],[1e-6,'µ'],[1e-9,'n'],[1e-12,'p']];
+  function fmt(x,u){
+    if(x===null||!isFinite(x))return '–';
+    if(x===0)return '0 '+u;
+    var a=Math.abs(x);
+    for(var i=0;i<SI.length;i++){if(a>=SI[i][0]*0.9995||i===SI.length-1){return +(x/SI[i][0]).toPrecision(4)+' '+SI[i][1]+u;}}
+  }
+  function plain(x,d){return isFinite(x)?(+x.toFixed(d)).toLocaleString('en-US'):'–';}
+  function rows(list){return list.map(function(r){return '<div class="qc-row"><span>'+r[0]+'</span><b>'+r[1]+'</b></div>';}).join('');}
+  function setOut(id,html){g(id).innerHTML=html;}
+  function bad(){return '<div class="qc-warn">Check the number format, for example 4.7k or 220m.</div>';}
+
+  /* Ohm & power */
+  var OHM=['qc-v','qc-i','qc-r','qc-p'];
+  function ohm(){
+    var V=num('qc-v'),I=num('qc-i'),R=num('qc-r'),P=num('qc-p');
+    var vals=[V,I,R,P];
+    if(vals.some(function(x){return x!==null&&isNaN(x);}))return setOut('qc-ohm-out',bad());
+    var n=vals.filter(function(x){return x!==null;}).length;
+    if(n<2)return setOut('qc-ohm-out','');
+    if(n>2)return setOut('qc-ohm-out','<div class="qc-msg">Enter exactly two values; clear the others.</div>');
+    if(V!==null&&I!==null){R=V/I;P=V*I;}
+    else if(V!==null&&R!==null){I=V/R;P=V*V/R;}
+    else if(V!==null&&P!==null){I=P/V;R=V*V/P;}
+    else if(I!==null&&R!==null){V=I*R;P=I*I*R;}
+    else if(I!==null&&P!==null){V=P/I;R=P/(I*I);}
+    else {V=Math.sqrt(P*R);I=Math.sqrt(P/R);}
+    setOut('qc-ohm-out',rows([['Voltage',fmt(V,'V')],['Current',fmt(I,'A')],['Resistance',fmt(R,'Ω')],['Power',fmt(P,'W')]]));
+  }
+  OHM.forEach(function(id){g(id).addEventListener('input',ohm);});
+
+  /* Converter */
+  var GAIN={buck:function(D){return D;},boost:function(D){return 1/(1-D);},bb:function(D){return D/(1-D);},quad:function(D){return 1/((1-D)*(1-D));}};
+  var DUTY={buck:function(M){return M;},boost:function(M){return 1-1/M;},bb:function(M){return M/(1+M);},quad:function(M){return 1-Math.sqrt(1/M);}};
+  function conv(){
+    var top=g('qc-top').value,Vin=num('qc-vin'),Vo=num('qc-vout'),D=num('qc-d'),fs=num('qc-fs'),dI=num('qc-di');
+    if([Vin,Vo,D,fs,dI].some(function(x){return x!==null&&isNaN(x);}))return setOut('qc-conv-out',bad());
+    if(Vin===null||(Vo===null&&D===null))return setOut('qc-conv-out','');
+    var out=[],M;
+    if(Vo!==null){
+      M=Vo/Vin;
+      if(top==='buck'&&M>=1)return setOut('qc-conv-out','<div class="qc-warn">A buck converter needs Vout &lt; Vin.</div>');
+      if((top==='boost'||top==='quad')&&M<=1)return setOut('qc-conv-out','<div class="qc-warn">A boost converter needs Vout &gt; Vin.</div>');
+      D=DUTY[top](M);
+      out.push(['Duty cycle D',plain(D,4)]);out.push(['Voltage gain M',plain(M,3)]);
+    }else{
+      if(D<=0||D>=1)return setOut('qc-conv-out','<div class="qc-warn">D must be between 0 and 1.</div>');
+      M=GAIN[top](D);Vo=M*Vin;
+      out.push(['Voltage gain M',plain(M,3)]);out.push([top==='bb'?'|Vout|':'Vout',fmt(Vo,'V')]);
+    }
+    if(D>0.85&&top!=='buck')out.push(['Note','<span class="qc-warn">D &gt; 0.85: losses limit real gain</span>']);
+    if(fs!==null&&dI!==null&&fs>0&&dI>0){
+      if(top==='buck')out.push(['L for ΔI<sub>L</sub>',fmt(Vo*(1-D)/(dI*fs),'H')]);
+      else if(top==='quad'){out.push(['L1 (input) for ΔI',fmt(Vin*D/(dI*fs),'H')]);out.push(['L2 for ΔI',fmt(Vin*D/((1-D)*dI*fs),'H')]);}
+      else out.push(['L for ΔI<sub>L</sub>',fmt(Vin*D/(dI*fs),'H')]);
+    }
+    setOut('qc-conv-out',rows(out));
+  }
+  ['qc-top','qc-vin','qc-vout','qc-d','qc-fs','qc-di'].forEach(function(id){g(id).addEventListener('input',conv);g(id).addEventListener('change',conv);});
+
+  /* Passives */
+  function pas(){
+    var f=num('qc-pf'),R=num('qc-pr'),L=num('qc-pl'),C=num('qc-pc'),I=num('qc-pi'),V=num('qc-pv');
+    if([f,R,L,C,I,V].some(function(x){return x!==null&&isNaN(x);}))return setOut('qc-pas-out',bad());
+    var out=[];
+    if(f!==null&&L!==null)out.push(['X<sub>L</sub> = 2πfL',fmt(2*Math.PI*f*L,'Ω')]);
+    if(f!==null&&C!==null)out.push(['X<sub>C</sub> = 1/(2πfC)',fmt(1/(2*Math.PI*f*C),'Ω')]);
+    if(L!==null&&C!==null){out.push(['Resonance f<sub>0</sub>',fmt(1/(2*Math.PI*Math.sqrt(L*C)),'Hz')]);out.push(['Characteristic Z<sub>0</sub>',fmt(Math.sqrt(L/C),'Ω')]);}
+    if(R!==null&&C!==null)out.push(['τ = RC',fmt(R*C,'s')]);
+    if(R!==null&&L!==null&&R>0)out.push(['τ = L/R',fmt(L/R,'s')]);
+    if(L!==null&&I!==null)out.push(['Inductor energy ½LI²',fmt(0.5*L*I*I,'J')]);
+    if(C!==null&&V!==null)out.push(['Capacitor energy ½CV²',fmt(0.5*C*V*V,'J')]);
+    setOut('qc-pas-out',out.length?rows(out):'');
+  }
+  ['qc-pf','qc-pr','qc-pl','qc-pc','qc-pi','qc-pv'].forEach(function(id){g(id).addEventListener('input',pas);});
+
+  /* Thermal & reliability */
+  function rel(){
+    var Ta=num('qc-ta'),Pl=num('qc-pl2'),Rth=num('qc-rth'),lam=num('qc-lam'),t=num('qc-t'),u=g('qc-lu').value;
+    if([Ta,Pl,Rth,lam,t].some(function(x){return x!==null&&isNaN(x);}))return setOut('qc-rel-out',bad());
+    var out=[];
+    if(Ta!==null&&Pl!==null&&Rth!==null)out.push(['Junction temp. T<sub>j</sub>',plain(Ta+Pl*Rth,1)+' °C']);
+    if(lam!==null&&lam>0){
+      var lh=u==='fit'?lam*1e-9:(u==='mh'?lam*1e-6:lam);
+      var mttf=1/lh;
+      out.push(['λ per hour',lh.toExponential(3)+' /h']);
+      out.push(['λ in FIT',plain(lh*1e9,2)+' FIT']);
+      out.push(['MTTF',plain(mttf,0)+' h']);
+      out.push(['MTTF in years',plain(mttf/8760,2)+' y']);
+      if(t!==null&&t>=0)out.push(['R(t) at '+plain(t,0)+' h',(Math.exp(-lh*t)*100).toFixed(2)+' %']);
+    }
+    setOut('qc-rel-out',out.length?rows(out):'');
+  }
+  ['qc-ta','qc-pl2','qc-rth','qc-lam','qc-t','qc-lu'].forEach(function(id){g(id).addEventListener('input',rel);g(id).addEventListener('change',rel);});
+
+  panel.querySelectorAll('[data-clear]').forEach(function(b){b.addEventListener('click',function(){
+    var pane=panel.querySelector('[data-pane="'+b.getAttribute('data-clear')+'"]');
+    pane.querySelectorAll('input').forEach(function(i){i.value='';});
+    pane.querySelectorAll('.qc-out').forEach(function(o){o.innerHTML='';});
+  });});
+})();
+</script>
+<!-- ===== end quick calculator ===== -->
+
 </body>
 </html>

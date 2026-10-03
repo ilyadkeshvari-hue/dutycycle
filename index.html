@@ -234,7 +234,7 @@ footer{margin-top:24px;color:var(--muted);font-size:.82rem;display:flex;justify-
   <section class="cards" aria-label="Sections">
     <a class="tc" href="#inductor"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 12h3"/><path d="M5 12c0-3 3-3 3 0s3 3 3 0 3-3 3 0 3 3 3 0"/><path d="M17 12h5"/><path d="M5 17h14"/></svg></span><h3>Inductor Design</h3><p>Turns, DC-bias drop, wire gauge, fill factor, winding and core losses, and temperature rise of power inductors.</p><span class="go">Open inductor design →</span></a>
     <a class="tc" href="#loss"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M6 16c2-6 4-8 7-8s4 3 6 6"/><path d="M7 7h3M7 4h6"/></svg></span><h3>Loss &amp; Reliability</h3><p>Loss of every component, efficiency curves, junction temperatures, failure rates, and MTTF based on MIL-HDBK-217F.</p><span class="go">Open loss analysis →</span></a>
-    <a class="tc" href="#learn"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5"/><path d="M9 7h6M9 11h6"/></svg></span><h3>Learn</h3><p>All four families of power converters, their structures and fundamentals, common topics, and hands-on lab guides.</p><span class="go">Browse topics →</span></a>
+    <a class="tc" href="#learn"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5"/><path d="M9 7h6M9 11h6"/></svg></span><h3>Learn</h3><p>Industrial electronics, power electronics, and reliability, with design guides, hands-on labs, and research resources.</p><span class="go">Browse topics →</span></a>
   </section>
 </main>
 
@@ -428,7 +428,7 @@ footer{margin-top:24px;color:var(--muted);font-size:.82rem;display:flex;justify-
 
 <main id="learn-intro" class="hidden">
   <div class="art-wrap">
-    <div class="crumbs"><a href="#learn">Learn</a> / <a href="#learn/converters">Power converters</a> / <a href="#learn/converters/dcdc">DC–DC converters</a> / Introduction and history</div>
+    <div class="crumbs"><a href="#learn">Learn</a> / <a href="#learn/power-electronics">Power electronics</a> / <a href="#learn/power-electronics/converters/dcdc">DC–DC converters</a> / Introduction and history</div>
     <article class="article">
       <span class="eyebrow">Article 1</span>
       <h1>Introduction and history</h1>
@@ -467,14 +467,14 @@ footer{margin-top:24px;color:var(--muted);font-size:.82rem;display:flex;justify-
         <li>D. Maksimović and S. Ćuk, “Switching converters with wide DC conversion range,” <i>IEEE Trans. Power Electron.</i>, 1991.</li>
         <li>K. Shirriff, “The quiet remaking of computer power supplies,” <i>IEEE Spectrum</i>, Aug. 2019.</li>
       </ol>
-      <div class="art-nav"><a href="#learn/converters/dcdc">← DC–DC converters</a><a href="#learn/converters/dcdc/non-isolated/basic">Basic topologies →</a></div>
+      <div class="art-nav"><a href="#learn/power-electronics/converters/dcdc">← DC–DC converters</a><a href="#learn/power-electronics/converters/dcdc/non-isolated/basic">Basic topologies →</a></div>
     </article>
   </div>
 </main>
 
 <main id="learn-lab" class="hidden">
   <div class="art-wrap">
-    <div class="crumbs"><a href="#learn">Learn</a> / <a href="#learn/hands-on">Hands-on lab</a> / Building a laboratory boost converter</div>
+    <div class="crumbs"><a href="#learn">Learn</a> / <a href="#learn/design">Design and implementation</a> / <a href="#learn/design/lab">Hands-on lab</a> / Building a laboratory boost converter</div>
     <article class="article">
       <span class="eyebrow">Practical guide</span>
       <h1>Building a laboratory boost converter</h1>
@@ -558,7 +558,7 @@ footer{margin-top:24px;color:var(--muted);font-size:.82rem;display:flex;justify-
         <li>An inductor current that bends upward within a switching period: core saturation.</li>
         <li>Erratic controller behavior: switching noise coupling into the signal ground.</li>
       </ul>
-      <div class="art-nav"><a href="#learn/hands-on">← Hands-on lab</a><a href="#learn/converters/dcdc/intro">Introduction and history →</a></div>
+      <div class="art-nav"><a href="#learn/design/lab">← Hands-on lab</a><a href="#learn/power-electronics/converters/dcdc/intro">Introduction and history →</a></div>
     </article>
   </div>
 </main>
@@ -824,9 +824,28 @@ $('iSend').onclick=()=>{const i=+$('iTarget').value;if(i<0||!window._ind)return;
 
 /* ---------- learning section: tree of topics ---------- */
 const TREE={k:'learn',t:'Learn',
- intro:['Learning material on power conversion, organized in three parts: the four families of power converters, topics shared by all of them, and practical laboratory guides.'],
+ intro:['Learning material organized in five parts: industrial electronics, power electronics, reliability, design and implementation, and research and reference resources.'],
  children:[
- {k:'converters',t:'Power converters',d:'DC–DC, DC–AC, AC–DC, and AC–AC converters: their structures, topologies, and fundamentals.',
+ {k:'industrial',t:'Industrial electronics',d:'Electronic devices, sensors and measurement, embedded implementation, machines and drives, power quality, and datasheets.',
+  intro:['Industrial electronics covers the circuits, measurements, and digital implementation needed to build and control electronic systems in industry. These topics form the practical basis on which power converters are designed and operated.'],
+  children:[
+  {k:'devices-circuits',t:'Electronic devices and circuits',d:'Diodes, transistors, operational amplifiers, and basic circuits.',
+   intro:['Diodes, bipolar and field-effect transistors, and operational amplifiers are the building blocks of every electronic system. Understanding their characteristics and basic circuits is the first step toward analog signal processing, driver circuits, and power stages.']},
+  {k:'sensors-measurement',t:'Sensors and measurement',d:'Voltage and current sensing, temperature sensors, signal conditioning, and ADCs.',
+   intro:['Control and protection rely on accurate measurements. Voltage is sensed with dividers and isolated amplifiers, current with shunt resistors or Hall-effect sensors, and temperature with thermistors or integrated sensors. Signal conditioning filters and scales these signals before an analog-to-digital converter (ADC) samples them.']},
+  {k:'embedded',t:'Embedded implementation',d:'Microcontrollers, PWM generation, sampling, and digital control.',
+   intro:['Modern converters are controlled by microcontrollers or DSPs. The controller generates PWM signals, samples the measured quantities in step with the switching, and runs the control algorithm in discrete time. Timers, ADC triggering, and interrupt timing decide how well the digital controller performs.']},
+  {k:'machines-drives',t:'Electric machines and drives',d:'DC, induction, and permanent-magnet synchronous motors, and variable-speed drives.',
+   intro:['Electric machines convert electrical energy into motion. DC, induction, and permanent-magnet synchronous machines each have their own characteristics and control methods, and power-electronic drives control their speed and torque in applications from industry to electric vehicles.']},
+  {k:'power-quality-emc',t:'Power quality and EMC',d:'Harmonics, EMI filters, and the standards that limit them.',
+   intro:['Switching converters distort the grid current and emit electromagnetic interference. Power quality concerns harmonics, flicker, and power factor, while electromagnetic compatibility (EMC) concerns conducted and radiated emissions. EMI filters and careful layout keep equipment within the limits set by standards.']},
+  {k:'datasheets',t:'Reading datasheets',d:'Extracting the real ratings of MOSFETs, diodes, capacitors, and magnetic cores.',
+   intro:['A datasheet contains the information needed to select a component, but headline values are often measured under ideal conditions. Reading the curves, test conditions, and derating information gives the real on-resistance, switching energy, ripple-current rating, or core loss at the operating point of a design.']}
+  ]},
+ {k:'power-electronics',t:'Power electronics',d:'Power converters, semiconductors, magnetics, modeling and control, gate drivers, and applications.',
+  intro:['Power electronics is the efficient conversion and control of electrical energy with switching devices. This part covers the four families of power converters together with the devices, components, control methods, and applications that make them work.'],
+  children:[
+  {k:'converters',t:'Power converters',d:'DC–DC, DC–AC, AC–DC, and AC–AC converters: their structures, topologies, and fundamentals.',
   intro:['Power converters are grouped into four families by the type of their input and output. Each family has two parts: <b>Structures and topologies</b>, which introduces the circuits and the families of converters, and <b>Fundamentals</b>, which covers the basic concepts used to analyze and design them.'],
   children:[
   {k:'dcdc',t:'DC–DC converters',d:'Non-isolated and isolated converters, voltage-gain extension networks, operating modes, stresses, passive design, and MPPT.',ic:'dcdc',
@@ -875,7 +894,7 @@ const TREE={k:'learn',t:'Learn',
      ]}
    ]},
    {t:'Fundamentals',d:'The basic concepts used to analyze and design DC–DC converters.',items:[
-    {t:'Introduction and history',d:'Why DC–DC conversion is needed and how switching converters evolved.',href:'#learn/converters/dcdc/intro',article:true},
+    {t:'Introduction and history',d:'Why DC–DC conversion is needed and how switching converters evolved.',href:'#learn/power-electronics/converters/dcdc/intro',article:true},
     {k:'modes',t:'Operating modes',d:'Continuous, discontinuous, and boundary conduction modes.',
      intro:['A converter operates in continuous conduction mode (CCM) when its inductor current never falls to zero, in discontinuous conduction mode (DCM) when it does, and in boundary conduction mode (BCM) at the limit between them. The mode changes the voltage gain, the component stresses, and the dynamic behavior.']},
     {k:'voltage-gain',t:'Voltage gain',d:'Ideal and non-ideal voltage gain, and the effect of parasitic resistances.',
@@ -985,27 +1004,98 @@ const TREE={k:'learn',t:'Learn',
    ]}
    ]}
   ]},
- {k:'common',t:'Common topics',d:'Control, thermal analysis and reliability, and power semiconductors, shared by all converter families.',
-  intro:['Some topics apply to every converter family. They are collected here and linked from the Fundamentals of each family.'],
-  children:[
-  {k:'control',t:'Control',d:'Small-signal modeling, compensator design, and PID, sliding-mode, fuzzy, and model predictive control.',
-   intro:['Converter control starts with a small-signal model that describes how the output responds to small changes of the duty cycle. Compensators, such as Type II and Type III networks, are then designed for stability and speed. Nonlinear methods, including sliding-mode, fuzzy, and model predictive control, handle large disturbances and constraints.']},
-  {k:'thermal-reliability',t:'Thermal analysis and reliability',d:'Junction temperature, thermal networks, MIL-HDBK-217F, and MTTF.',
-   intro:['Component temperature is the main factor in converter lifetime. Thermal networks, such as Cauer and Foster models, estimate junction temperatures from the losses. Reliability standards like MIL-HDBK-217F then give failure rates, and Markov models combine them into the mean time to failure (MTTF) of the whole converter.'],
-   rel:[{h:'#loss',t:'Loss & Reliability tool'}]},
   {k:'semiconductors',t:'Power semiconductors',d:'Si, SiC, and GaN devices and how they change converter design.',
-   intro:['Silicon MOSFETs and IGBTs dominate today’s converters, while silicon carbide (SiC) and gallium nitride (GaN) devices switch faster with lower losses. Wide-bandgap devices allow higher switching frequencies and smaller passive components but demand careful layout and gate driving.']}
+   intro:['Silicon MOSFETs and IGBTs dominate today’s converters, while silicon carbide (SiC) and gallium nitride (GaN) devices switch faster with lower losses. Wide-bandgap devices allow higher switching frequencies and smaller passive components but demand careful layout and gate driving.']},
+  {k:'magnetics-passives',t:'Magnetics and passive components',d:'Inductor and transformer design, and capacitor selection.',
+   intro:['Inductors, transformers, and capacitors often set the size, weight, and losses of a converter. Magnetic design balances core loss, winding loss, and saturation, while capacitor selection depends on ripple current, voltage rating, and lifetime.'],
+   rel:[{h:'#inductor',t:'Inductor Design tool'}]},
+  {k:'modeling-control',t:'Modeling and control',d:'Small-signal modeling, compensator design, and PID, sliding-mode, fuzzy, and model predictive control.',
+   intro:['Converter control starts with a small-signal model that describes how the output responds to small changes of the duty cycle. Compensators, such as Type II and Type III networks, are then designed for stability and speed. Nonlinear methods, including sliding-mode, fuzzy, and model predictive control, handle large disturbances and constraints.']},
+  {k:'gate-drivers',t:'Gate drivers and protection',d:'Gate drive design, isolation, short-circuit and overvoltage protection, and snubbers.',
+   intro:['The gate driver turns the control signal into the voltage and current needed to switch a power device quickly and safely. Its design covers isolation, gate resistance, and supply, and it often includes protection against short circuits and overvoltage. Snubbers and clamps limit voltage spikes caused by stray inductance.']},
+  {k:'applications',t:'Applications',d:'Photovoltaic and renewable energy integration, energy storage and BMS, and electric vehicles.',
+   intro:['Power electronics connects modern energy sources and loads. These pages introduce its main application areas.'],
+   children:[
+   {k:'renewables',t:'Photovoltaic and renewable energy integration',d:'Interfacing PV and wind sources with DC buses and the grid.',
+    intro:['Renewable sources produce power that varies with weather and must be adapted to the grid or a DC bus. Power converters extract the maximum available power, raise the voltage to the required level, and inject current that meets grid requirements.']},
+   {k:'storage-bms',t:'Energy storage and battery management',d:'Battery interfaces, charging, and battery management systems.',
+    intro:['Batteries and other storage devices connect to the system through bidirectional converters. A battery management system (BMS) monitors cell voltages, currents, and temperatures, balances the cells, and protects the pack.']},
+   {k:'ev',t:'Electric vehicles',d:'Traction inverters, onboard chargers, and DC–DC converters in vehicles.',
+    intro:['An electric vehicle contains several power converters: the traction inverter that drives the motor, the onboard charger, and DC–DC converters that supply the low-voltage network. Efficiency, power density, and reliability are the main design targets.']}
+   ]}
   ]},
- {k:'hands-on',t:'Hands-on lab',d:'Practical guides for building and testing converters in the laboratory.',
-  intro:['Practical guides for turning a converter design into a working prototype.'],
+ {k:'reliability',t:'Reliability',d:'Failure rates, prediction standards, system modeling, thermal analysis, physics of failure, lifetime estimation, and fault tolerance.',
+  intro:['Reliability is the probability that a system performs its function for a given time under given conditions. For power electronics, where devices operate under electrical and thermal stress, reliability is as important as efficiency. This part covers both prediction-based and physics-based approaches.'],
   children:[
-  {t:'Building a laboratory boost converter',d:'Step-by-step guide to designing, assembling, and testing a boost converter prototype.',href:'#learn/hands-on/boost-lab',article:true},
-  {k:'pcb',t:'PCB layout for power converters',d:'Power loops, grounding, and thermal design of converter boards.',
-   intro:['A good layout keeps the high-frequency current loops small, separates power and signal grounds, and provides copper area for heat spreading. Layout mistakes cause voltage spikes, noise, and unstable control.']},
-  {k:'measurement',t:'Measurement techniques',d:'Using oscilloscopes, probes, and electronic loads correctly.',
-   intro:['Reliable measurements require the right probes and grounding: short ground connections for switching waveforms, current probes or shunts for inductor current, and power analyzers or careful calculation for efficiency.']}
+  {k:'fundamentals',t:'Reliability fundamentals',d:'Failure rate, the bathtub curve, the reliability function, MTTF, and MTBF.',
+   intro:['The failure rate describes how often failures occur. Over the life of a product it follows the bathtub curve: early failures, a period of constant random failures, and wear-out. From the failure rate follow the reliability function and the mean time to failure (MTTF) or between failures (MTBF).']},
+  {k:'prediction-standards',t:'Reliability prediction standards',d:'MIL-HDBK-217F, FIDES, and IEC 61709.',
+   intro:['Prediction handbooks estimate component failure rates from base values multiplied by factors for temperature, electrical stress, quality, and environment. MIL-HDBK-217F is the classic reference, while FIDES and IEC 61709 offer more recent models.'],
+   rel:[{h:'#loss',t:'Loss & Reliability tool'}]},
+  {k:'system-modeling',t:'System reliability modeling',d:'Series and parallel models, reliability block diagrams, Markov chains, and fault trees.',
+   intro:['Component failure rates are combined into a system model. Reliability block diagrams describe series and parallel structures, Markov chains capture systems that can operate in degraded states, and fault trees trace how combinations of failures lead to a system failure.'],
+   rel:[{h:'#loss',t:'Loss & Reliability tool'}]},
+  {k:'thermal-modeling',t:'Thermal modeling',d:'Foster and Cauer networks and junction temperature estimation.',
+   intro:['Junction temperature is the strongest driver of semiconductor failure. Thermal networks, either Foster models fitted to datasheet curves or Cauer models that follow the physical layers, estimate the junction temperature from the losses and the cooling system.']},
+  {k:'physics-of-failure',t:'Physics of failure',d:'Bond-wire lift-off, solder fatigue, and capacitor wear-out.',
+   intro:['Physics-of-failure methods study how components actually fail. In power modules, temperature cycling causes bond-wire lift-off and solder fatigue, while electrolytic capacitors wear out as their electrolyte evaporates. Understanding these mechanisms allows lifetime to be modeled rather than only predicted from handbooks.']},
+  {k:'mission-profile',t:'Mission-profile-based lifetime estimation',d:'Rainflow counting, the Coffin–Manson model, and Miner’s rule.',
+   intro:['A mission profile describes how load and ambient conditions change over a product’s life. The resulting temperature swings are counted with the rainflow algorithm, the damage of each cycle is estimated with lifetime models such as Coffin–Manson, and Miner’s rule sums the damage to estimate the lifetime.']},
+  {k:'design-monitoring',t:'Reliability-oriented design and condition monitoring',d:'Designing for reliability, health monitoring, and digital twins.',
+   intro:['Reliability-oriented design treats lifetime as a design target alongside efficiency and cost. Condition monitoring tracks indicators of ageing, such as on-state voltage or capacitor ESR, during operation, and digital twins combine models with measurements to estimate the remaining useful life.']},
+  {k:'fault-tolerance',t:'Fault tolerance and redundancy',d:'Keeping converters operating after a component failure.',
+   intro:['Fault-tolerant converters continue to operate, possibly at reduced performance, after a component fails. Redundant switches or phases, reconfiguration, and adapted control strategies are used where a shutdown is unacceptable.']}
+  ]},
+ {k:'design',t:'Design and implementation',d:'A complete converter design workflow, simulation tools, and hands-on laboratory guides.',
+  intro:['From specification to working prototype: a step-by-step design workflow, the simulation tools used along the way, and practical laboratory guides.'],
+  children:[
+  {k:'workflow',t:'Converter design workflow',d:'From specification to tested prototype, step by step.',
+   intro:['Designing a converter follows a sequence of steps: defining the specifications, selecting the topology, choosing the components, estimating losses and efficiency, checking temperatures and reliability, laying out the PCB, and testing the prototype. Each step links to the related lessons and tools on this site.'],
+   rel:[{h:'#inductor',t:'Inductor Design tool'},{h:'#loss',t:'Loss & Reliability tool'}]},
+  {k:'simulation',t:'Simulation tools',d:'PLECS, PSCAD, and MATLAB/Simulink for power converters.',
+   intro:['Simulation checks a design before hardware is built. Different tools suit different tasks, from fast circuit and thermal simulation to power-system studies and control design.'],
+   children:[
+   {k:'plecs',t:'PLECS',d:'Fast converter simulation with integrated thermal modeling.',
+    intro:['PLECS is built for power electronics. Ideal switch models make simulations fast, and its thermal library links device losses to heat sinks and thermal networks, which makes it well suited for loss and junction temperature studies.']},
+   {k:'pscad',t:'PSCAD',d:'Electromagnetic transient simulation of converters and power systems.',
+    intro:['PSCAD is an electromagnetic transient simulator widely used for power systems and grid-connected converters. It is strong in studies where converters interact with networks, protection, and machines.']},
+   {k:'matlab-simulink',t:'MATLAB/Simulink',d:'Analysis scripts, control design, and converter models.',
+    intro:['MATLAB is used for analytical calculations, parameter sweeps, and publication figures, while Simulink and its power-system libraries model converters together with their controllers.']}
+   ]},
+  {k:'lab',t:'Hands-on lab',d:'Building and testing converters in the laboratory.',
+   intro:['Practical guides for turning a converter design into a working prototype.'],
+   children:[
+   {t:'Building a laboratory boost converter',d:'Step-by-step guide to designing, assembling, and testing a boost converter prototype.',href:'#learn/design/lab/boost-lab',article:true},
+   {k:'pcb',t:'PCB layout for power converters',d:'Power loops, grounding, and thermal design of converter boards.',
+    intro:['A good layout keeps the high-frequency current loops small, separates power and signal grounds, and provides copper area for heat spreading. Layout mistakes cause voltage spikes, noise, and unstable control.']},
+   {k:'measurement',t:'Measurement techniques',d:'Using oscilloscopes, probes, and electronic loads correctly.',
+    intro:['Reliable measurements require the right probes and grounding: short ground connections for switching waveforms, current probes or shunts for inductor current, and power analyzers or careful calculation for efficiency.']}
+   ]}
+  ]},
+ {k:'research',t:'Research and reference',d:'A research toolkit for graduate students, plus formula sheets and a glossary.',
+  intro:['Resources for graduate students and researchers, and quick-reference material for everyday design work.'],
+  children:[
+  {k:'toolkit',t:'Research toolkit',d:'Comparing topologies, publication-quality figures, and writing papers.',
+   intro:['Practical guidance for graduate research in power electronics.'],
+   children:[
+   {k:'topology-comparison',t:'Comparing topologies',d:'Fair comparison of new converters with existing ones.',
+    intro:['A new topology is judged against existing ones on voltage gain, component count, normalized voltage and current stress, efficiency, and reliability. A fair comparison uses the same operating point and normalized quantities so that the advantages and costs of each design are clear.']},
+   {k:'figures',t:'Publication-quality figures',d:'Clear, consistent figures with MATLAB.',
+    intro:['Good figures make a paper easier to review. Consistent fonts and line widths, vector formats, readable axes, and charts suited to the data, such as stress comparisons and loss breakdowns, help results speak for themselves.']},
+   {k:'paper-writing',t:'Writing a power electronics paper',d:'Structure and presentation of converter papers.',
+    intro:['Most converter papers follow a recognizable structure: motivation and literature review, operating principle, steady-state and design analysis, comparison, and experimental validation. Presenting each part clearly and consistently is as important as the results themselves.']}
+   ]},
+  {k:'formulas-glossary',t:'Formula sheets and glossary',d:'Key equations of common topologies and definitions of terms.',
+   intro:['Quick-reference material for design work: the key equations of common converter topologies and short definitions of the terms used throughout this site.'],
+   children:[
+   {k:'formulas',t:'Formula sheets',d:'Voltage gain, ripple, and stress equations of common converters.',
+    intro:['Formula sheets collect the voltage gain, current and voltage ripple, and component stress equations of the common converters in one place, ready to print.']},
+   {k:'glossary',t:'Glossary',d:'Definitions of power electronics and reliability terms.',
+    intro:['Short definitions of the terms used across power electronics and reliability, from duty cycle and conduction modes to failure rate and MTTF.']}
+   ]}
   ]}
  ]};
+
 const LIC={
  dcdc:'<path d="M3 9h12M3 15h12" stroke-dasharray="3 2"/><path d="M20 12h8M25 9l3 3-3 3"/><path d="M33 9h12M33 15h12" stroke-dasharray="3 2"/>',
  dcac:'<path d="M3 9h12M3 15h12" stroke-dasharray="3 2"/><path d="M20 12h8M25 9l3 3-3 3"/><path d="M32 12c2-6 4-6 6 0s4 6 6 0"/>',
@@ -1050,9 +1140,9 @@ function route(){
   ['home','learn-node','learn-intro','learn-lab','app','indapp'].forEach(x=>$(x).classList.add('hidden'));
   if(h==='loss'){$('app').classList.remove('hidden');if(cur===2)buildTables();if(cur===3)render();if(cur===4){buildRelTables();renderRel();}}
   else if(h==='inductor'){$('indapp').classList.remove('hidden');try{Object.entries(imap).forEach(([id,k])=>$(id).value=IND[k]);renderInd();}catch(e){console.error(e);}}
-  else if(['learn/converters/dcdc/intro','learn/dcdc/intro','learn/intro'].includes(h)){$('learn-intro').classList.remove('hidden');}
-  else if(['learn/hands-on/boost-lab','learn/dcdc/lab'].includes(h)){$('learn-lab').classList.remove('hidden');}
-  else if(h==='learn/dcdc'){location.replace('#learn/converters/dcdc');return;}
+  else if(['learn/power-electronics/converters/dcdc/intro','learn/converters/dcdc/intro','learn/dcdc/intro','learn/intro'].includes(h)){$('learn-intro').classList.remove('hidden');}
+  else if(['learn/design/lab/boost-lab','learn/hands-on/boost-lab','learn/dcdc/lab'].includes(h)){$('learn-lab').classList.remove('hidden');}
+  else if(h==='learn/dcdc'||h==='learn/converters'||h.startsWith('learn/converters/')){location.replace('#'+h.replace(/^learn\/(dcdc)$/,'learn/converters/$1').replace(/^learn\/converters/,'learn/power-electronics/converters'));return;}
   else if(h.split('/')[0]==='learn'&&renderLearn(h)){}
   else $('home').classList.remove('hidden');
   document.querySelectorAll('.links a').forEach(a=>a.toggleAttribute('aria-current',a.dataset.r===h)||(a.dataset.r===h&&a.setAttribute('aria-current','page')));
